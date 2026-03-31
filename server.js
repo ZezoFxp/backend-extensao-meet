@@ -20,8 +20,13 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Permite requests sem origin (ex: curl, testes locais) ou origins na whitelist
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    // Permite requests sem origin, origins na whitelist, OU qualquer extensão do Chrome
+    if (
+      !origin || 
+      allowedOrigins.length === 0 || 
+      allowedOrigins.includes(origin) || 
+      origin.startsWith("chrome-extension://")
+    ) {
       cb(null, true);
     } else {
       cb(new Error(`CORS bloqueado para origin: ${origin}`));
